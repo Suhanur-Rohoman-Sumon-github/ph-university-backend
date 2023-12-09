@@ -7,7 +7,7 @@ async function main() {
   try {
     await mongoose.connect(`${process.env.Database_Url}` as string)
     app.listen(port, () => {
-      console.log(`this is runing app listening on port ${process.env.PORT}`)
+      console.log(`app is  listening on port ${process.env.PORT}`)
     })
   } catch (error) {
     console.log(error)

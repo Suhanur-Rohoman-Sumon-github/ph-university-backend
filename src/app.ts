@@ -7,7 +7,7 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/', (req: Request, res: Response) => {
-  res.send("vao ki obostha")
+  res.send("vao ki obostha tumar")
 })
 
 export default app
