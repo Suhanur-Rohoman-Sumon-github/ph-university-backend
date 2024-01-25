@@ -11,6 +11,7 @@ import {
   TName,
   TStudent,
 } from './student.interface'
+import config from '../../config'
 
 const userNameSchema = new Schema<TName, StudentModels>({
   firstName: {
@@ -82,6 +83,7 @@ const LocalGuardianSchema = new Schema<TLocalGuardian>({
 const StudentSchema = new Schema<TStudent>(
   {
     id: { type: String, unique: true, required: true },
+    user:{type:Schema.ObjectId,required:true,unique:true,ref:'User'},
     password: {
       type: String,
       required: true,
@@ -141,7 +143,6 @@ const StudentSchema = new Schema<TStudent>(
       type: LocalGuardianSchema,
       required: [true, 'Local gordian is required'],
     },
-    isActive: { type: String, enum: ['active', 'inActive'], default: 'active' },
     // profileImge: { type: String, required: [true,"profile image is required"] },
     isDeleted: { type: Boolean, default: false },
   },
@@ -162,7 +163,7 @@ StudentSchema.pre('save', async function (next) {
   const user = this
   user.password = await bcrypt.hash(
     user.password,
-    Number(process.env.bcrypt_salt_round),
+    Number(config.bcrypt_salt_round),
   )
   next()
 })
