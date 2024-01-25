@@ -3,7 +3,7 @@ import { StudentControllers } from './student.cntroller'
 
 const router = express.Router()
 
-router.post('/creat-students', StudentControllers.createStudent)
+router.post('/create-students', StudentControllers.createStudent)
 router.get('/', StudentControllers.getAllstudents)
 router.get('/:id', StudentControllers.singleUser)
 

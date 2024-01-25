@@ -1,36 +1,45 @@
-export type Gerdian = {
+import { Model } from "mongoose"
+
+export type TGuardian = {
   fatherName: string
-  fatherOcopation: string
+  fatherOccupation: string
   fatherContactNo: string
   matherName: string
-  matherOcopation: string
+  matherOccupation: string
   matherContactNo: string
 }
 
-export type LocalGerdian = {
+export type TLocalGuardian = {
   name: string
-  ocopation: string
+  occupation: string
   contactNo: string
 }
 
-export type Name = {
+export type TName = {
   firstName: string
-  midleName: string
+  middleName?: string
   lastName: string
 }
 
-export type Student = {
+export type TStudent = {
   id: string
-  name: Name
-  gender: 'male' | 'femle'
-  constactNumbar: string
-  emargencyContactNumbar: string
+  password:string
+  name: TName
+  gender: 'male' | 'female'
+  contactNumber: string
+  emergencyContactNumber: string
   email: string
   bloodgroupe?: 'a+' | 'b+'
-  presentAdrees: string
-  parmannetAdress: string
-  gerdian: Gerdian
-  localGerdian: LocalGerdian
-  profileImge?: string
+  presentAddress: string
+  permanentAddress: string
+  guardian: TGuardian
+  localGuardian: TLocalGuardian
+  profileImg?: string
   isActive: 'active' | 'inActive'
 }
+
+// creating a custom static method
+export interface StudentModels extends Model<TStudent> {
+  isUserExist(id: string): Promise<TStudent | null>;
+}
+
