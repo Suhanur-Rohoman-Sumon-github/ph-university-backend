@@ -5,25 +5,21 @@ import StudentValidationSchema from './student.validation'
 const createStudent = async (req: Request, res: Response) => {
   try {
     const student = req.body.students
-    
+
     const zodParsedData = StudentValidationSchema.parse(student)
     const results = await StudentServices.creatStudentIntoDB(zodParsedData)
     res.status(200).json({
       success: true,
       message: 'Student is created successfully',
       data: results,
-    });
+    })
   } catch (error) {
-     
     res.status(500).json({
       success: false,
       message: 'user already exists',
-      
-    });
+    })
   }
 }
-
-
 
 const getAllstudents = async (req: Request, res: Response) => {
   try {
@@ -38,7 +34,7 @@ const getAllstudents = async (req: Request, res: Response) => {
       success: false,
       message: 'Something went wrong',
       data: error,
-    });
+    })
   }
 }
 
@@ -52,7 +48,28 @@ const singleUser = async (req: Request, res: Response) => {
       data: results,
     })
   } catch (error) {
-    console.error(error)
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      data: error,
+    })
+  }
+}
+const deleteStudentFromDb = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id
+    const results = await StudentServices.deleteStudentDb(id)
+    res.status(200).json({
+      success: true,
+      massage: 'student data deleted successfully',
+      data: results,
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong',
+      data: error,
+    })
   }
 }
 
@@ -60,4 +77,5 @@ export const StudentControllers = {
   createStudent,
   getAllstudents,
   singleUser,
+  deleteStudentFromDb,
 }

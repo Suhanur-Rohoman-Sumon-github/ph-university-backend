@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-expressions */
 import { Schema, model } from 'mongoose'
-import validator from 'validator';
+import validator from 'validator'
 import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -11,18 +12,18 @@ import {
   TStudent,
 } from './student.interface'
 
-const userNameSchema = new Schema<TName , StudentModels>({
+const userNameSchema = new Schema<TName, StudentModels>({
   firstName: {
     type: String,
     required: true,
-    validate:{
-      validator:function(value:string){
-        const firstStr = value.charAt(0).toUpperCase()+value.slice(1)
+    validate: {
+      validator: function (value: string) {
+        const firstStr = value.charAt(0).toUpperCase() + value.slice(1)
         return firstStr === value
       },
-      message:"{VALUE} is uppercase"
+      message: '{VALUE} is uppercase',
     },
-    trim:true
+    trim: true,
   },
   middleName: {
     type: String,
@@ -30,11 +31,10 @@ const userNameSchema = new Schema<TName , StudentModels>({
   lastName: {
     type: String,
     required: true,
-    validate:{
-      validator:(value:string) =>validator.isAlpha(value)
+    validate: {
+      validator: (value: string) => validator.isAlpha(value),
     },
-    massage:"{VALUE} is not a valid string"
-    
+    massage: '{VALUE} is not a valid string',
   },
 })
 const guardianSchema = new Schema<TGuardian>({
@@ -79,75 +79,121 @@ const LocalGuardianSchema = new Schema<TLocalGuardian>({
   },
 })
 
-const StudentSchema = new Schema<TStudent>({
-  id: { type: String,unique:true,required:true },
-  password: { type: String,required:true ,maxlength:[20," password cannot be longer then 20"]},
-  name: {
-    type:userNameSchema,
-    required:[true,"name is required"],
-    maxlength:[20," name cannot be longer then 20"],
-   
-  },
-  gender: {
-    type:String,
-    enum:{
-      values:['male', 'female'],
-      message:"gender is required"
+const StudentSchema = new Schema<TStudent>(
+  {
+    id: { type: String, unique: true, required: true },
+    password: {
+      type: String,
+      required: true,
+      maxlength: [20, ' password cannot be longer then 20'],
     },
-    required:true
-  },
-  contactNumber: { type: String, required: [true,"contact number is required"] },
-  emergencyContactNumber: { type: String, required: [true,"emergency contact number is required"] },
-  email: { 
-    type: String,
-     required: [true,"email is required"],
-     unique:true,
-     validate:{
-      validator:(value:string) =>validator.isEmail(value)
+    name: {
+      type: userNameSchema,
+      required: [true, 'name is required'],
+      maxlength: [20, ' name cannot be longer then 20'],
     },
-    massage:"{VALUE} is not a valid email"
-  },
-  bloodgroupe: {
-    type:String,
-    enum:{
-      values:["a+", "b+"],
-      message:"blood groupe is required"
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female'],
+        message: 'gender is required',
+      },
+      required: true,
     },
-    required:true
+    contactNumber: {
+      type: String,
+      required: [true, 'contact number is required'],
+    },
+    emergencyContactNumber: {
+      type: String,
+      required: [true, 'emergency contact number is required'],
+    },
+    email: {
+      type: String,
+      required: [true, 'email is required'],
+      unique: true,
+      validate: {
+        validator: (value: string) => validator.isEmail(value),
+      },
+      massage: '{VALUE} is not a valid email',
+    },
+    bloodgroupe: {
+      type: String,
+      enum: {
+        values: ['a+', 'b+'],
+        message: 'blood groupe is required',
+      },
+      required: true,
+    },
+    presentAddress: {
+      type: String,
+      required: [true, 'present address is required'],
+    },
+    permanentAddress: {
+      type: String,
+      required: [true, 'permanent address is required'],
+    },
+    guardian: {
+      type: guardianSchema,
+      required: [true, 'gordian is required'],
+    },
+    localGuardian: {
+      type: LocalGuardianSchema,
+      required: [true, 'Local gordian is required'],
+    },
+    isActive: { type: String, enum: ['active', 'inActive'], default: 'active' },
+    // profileImge: { type: String, required: [true,"profile image is required"] },
+    isDeleted: { type: Boolean, default: false },
   },
-  presentAddress: { type: String, required: [true,"present address is required"] },
-  permanentAddress: { type: String, required: [true,"permanent address is required"] },
-  guardian: {
-    type:guardianSchema,
-    required:[true,"gordian is required"]
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  localGuardian: {
-    type:LocalGuardianSchema,
-    required:[true,"Local gordian is required"]
-  },
-  isActive: { type: String, enum: ['active', 'inActive'], default: 'active' },
-  // profileImge: { type: String, required: [true,"profile image is required"] },
+)
+// make virtual
+StudentSchema.virtual('full name', function () {
+  return `${this.name.firstName}  ${this.name.middleName} ${this.name.lastName}`
 })
-
-StudentSchema.pre("save",async function(next){
+// add hashing password
+StudentSchema.pre('save', async function (next) {
   // hashing password and save into db
   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this ;
- user.password = await bcrypt.hash(user.password,Number(process.env.bcrypt_salt_round));
- next()
+  const user = this
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(process.env.bcrypt_salt_round),
+  )
+  next()
 })
-StudentSchema.post("save",async function(doc,next){
+
+// remove password from db
+StudentSchema.post('save', async function (doc, next) {
   // remove password from client response
   doc.password = ''
- next()
+  next()
+})
+// handle deleted data is not coming to the client side
+StudentSchema.pre('find', async function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
+// handle single deleted data is not coming to the client side
+StudentSchema.pre('findOne', async function (next) {
+  this.findOne({ isDeleted: { $ne: true } })
+  next()
+})
+// handle aggregation single deleted data is not coming to the client side
+StudentSchema.pre('aggregate', async function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
+  next()
 })
 
 StudentSchema.statics.isUserExist = async function (id: string) {
-  const existingUser = await this.findOne({ id });
-  return existingUser;
-};
-export const StudentModel = model<TStudent,StudentModels>('Student', StudentSchema)
-
-
-
-
+  const existingUser = await this.findOne({ id })
+  return existingUser
+}
+export const StudentModel = model<TStudent, StudentModels>(
+  'Student',
+  StudentSchema,
+)

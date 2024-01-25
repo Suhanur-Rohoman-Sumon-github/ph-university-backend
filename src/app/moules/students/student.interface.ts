@@ -1,4 +1,4 @@
-import { Model } from "mongoose"
+import { Model } from 'mongoose'
 
 export type TGuardian = {
   fatherName: string
@@ -23,7 +23,7 @@ export type TName = {
 
 export type TStudent = {
   id: string
-  password:string
+  password: string
   name: TName
   gender: 'male' | 'female'
   contactNumber: string
@@ -36,10 +36,10 @@ export type TStudent = {
   localGuardian: TLocalGuardian
   profileImg?: string
   isActive: 'active' | 'inActive'
+  isDeleted: boolean
 }
 
 // creating a custom static method
 export interface StudentModels extends Model<TStudent> {
-  isUserExist(id: string): Promise<TStudent | null>;
+  isUserExist(id: string): Promise<TStudent | null>
 }
-
