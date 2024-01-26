@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { Schema, model } from 'mongoose'
 import validator from 'validator'
-import bcrypt from 'bcrypt'
-import dotenv from 'dotenv'
-dotenv.config()
 import {
   StudentModels,
   TGuardian,
@@ -11,7 +8,7 @@ import {
   TName,
   TStudent,
 } from './student.interface'
-import config from '../../config'
+
 
 const userNameSchema = new Schema<TName, StudentModels>({
   firstName: {
@@ -84,11 +81,7 @@ const StudentSchema = new Schema<TStudent>(
   {
     id: { type: String, unique: true, required: true },
     user:{type:Schema.ObjectId,required:true,unique:true,ref:'User'},
-    password: {
-      type: String,
-      required: true,
-      maxlength: [20, ' password cannot be longer then 20'],
-    },
+    
     name: {
       type: userNameSchema,
       required: [true, 'name is required'],
@@ -156,24 +149,7 @@ const StudentSchema = new Schema<TStudent>(
 StudentSchema.virtual('full name', function () {
   return `${this.name.firstName}  ${this.name.middleName} ${this.name.lastName}`
 })
-// add hashing password
-StudentSchema.pre('save', async function (next) {
-  // hashing password and save into db
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_round),
-  )
-  next()
-})
 
-// remove password from db
-StudentSchema.post('save', async function (doc, next) {
-  // remove password from client response
-  doc.password = ''
-  next()
-})
 // handle deleted data is not coming to the client side
 StudentSchema.pre('find', async function (next) {
   this.find({ isDeleted: { $ne: true } })
