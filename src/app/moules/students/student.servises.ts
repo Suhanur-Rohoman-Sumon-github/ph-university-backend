@@ -1,7 +1,4 @@
 import { StudentModel } from './student.model'
-import { TStudent } from './student.interface'
-
-
 
 const getAllUserDB = async () => {
   const result = await StudentModel.find()

@@ -9,7 +9,6 @@ import {
   TStudent,
 } from './student.interface'
 
-
 const userNameSchema = new Schema<TName, StudentModels>({
   firstName: {
     type: String,
@@ -80,8 +79,8 @@ const LocalGuardianSchema = new Schema<TLocalGuardian>({
 const StudentSchema = new Schema<TStudent>(
   {
     id: { type: String, unique: true, required: true },
-    user:{type:Schema.ObjectId,required:true,unique:true,ref:'User'},
-    
+    user: { type: Schema.ObjectId, required: true, unique: true, ref: 'User' },
+
     name: {
       type: userNameSchema,
       required: [true, 'name is required'],

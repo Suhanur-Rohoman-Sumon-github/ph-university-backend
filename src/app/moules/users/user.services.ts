@@ -1,16 +1,16 @@
 /* eslint-disable no-useless-catch */
-import config from "../../config"
-import { TStudent } from "../students/student.interface"
-import { StudentModel } from "../students/student.model"
-import { TUser } from "./user.interface"
-import { UserModel } from "./user.model"
+import config from '../../config'
+import { TStudent } from '../students/student.interface'
+import { StudentModel } from '../students/student.model'
+import { TUser } from './user.interface'
+import { UserModel } from './user.model'
 
-const createStudentIntoDB = async ( password:string , student: TStudent) => {
+const createStudentIntoDB = async (password: string, student: TStudent) => {
   const userData: Partial<TUser> = {}
 
   // if password is not there use default password
   userData.password = password || (config.default_password as string)
-  userData.role = "student"
+  userData.role = 'student'
   userData.id = '203010001'
 
   try {
@@ -31,8 +31,8 @@ const createStudentIntoDB = async ( password:string , student: TStudent) => {
   } catch (error) {
     throw error // rethrow error for handling in the caller function
   }
-  }
+}
 
-  export const UserService = {
-    createStudentIntoDB
-  }
+export const UserService = {
+  createStudentIntoDB,
+}
