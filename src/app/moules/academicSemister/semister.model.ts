@@ -1,30 +1,30 @@
 import { Schema, model } from 'mongoose'
-import { Months, TAcademicSemester } from './semister.interface'
+import { TAcademicSemester } from './semesters.interface'
+import {
+  academicSemesterCode,
+  academicSemesterName,
+  months,
+} from './semester.constant'
 
-const months: Months[] = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
+const academicSemesterSchema = new Schema<TAcademicSemester>({
+  name: { type: String, required: true, enum: academicSemesterName },
+  year: { type: String, required: true, unique: true },
+  code: { type: String, required: true, enum: academicSemesterCode },
+  startMonth: { type: String, enum: months, required: true },
+  endMonth: { type: String, enum: months, required: true },
+})
+academicSemesterSchema.pre('save', async function (next) {
+  const isSemesterExist = await academicSemesterModel.findOne({
+    year: this.year,
+    name: this.name,
+  })
+  if (isSemesterExist) {
+    throw new Error('semester is already exist')
+  }
+  next()
+})
 
-const academicSemesterSchema = new Schema<TAcademicSemester>(
-  {
-    name: { type: String, required: true, unique: true },
-    year: { type: Date, required: true, unique: true },
-    code: { type: String ,required: true, },
-    startMonth: { type: String, enum: months },
-    endMonth:{ type: String, enum: months },
-  },
-  
+export const academicSemesterModel = model<TAcademicSemester>(
+  'Semester',
+  academicSemesterSchema,
 )
-
-export const academicSemesterModel = model<TAcademicSemester>('academicSemester',academicSemesterSchema)

@@ -4,7 +4,7 @@ import catchAsync from '../../../utils/catchAsync'
 import sendResponse from '../../../utils/sendResponse'
 import httpStatus from 'http-status'
 
-const getAllstudents = catchAsync(async (req: Request, res: Response) => {
+const getAllStudents = catchAsync(async (req: Request, res: Response) => {
   const results = await StudentServices.getAllUserDB()
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -37,7 +37,7 @@ const deleteStudentFromDb = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const StudentControllers = {
-  getAllstudents,
+  getAllStudents: getAllStudents,
   singleUser,
   deleteStudentFromDb,
 }

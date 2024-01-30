@@ -6,8 +6,8 @@ import handleGlobalError from './middleware/globalErrorHandler'
 import router from './routes/route'
 
 // parser
-app.use(express.json());
-app.use(cors());
+app.use(express.json())
+app.use(cors())
 
 // Application routers
 app.use('/api/v1', router)

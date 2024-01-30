@@ -37,6 +37,7 @@ export type TStudent = {
   localGuardian: TLocalGuardian
   profileImg?: string
   isDeleted: boolean
+  admissionSemester: Types.ObjectId
 }
 
 // creating a custom static method

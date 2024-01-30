@@ -3,7 +3,7 @@ import { StudentControllers } from './student.cntroller'
 
 const router = express.Router()
 
-router.get('/', StudentControllers.getAllstudents)
+router.get('/', StudentControllers.getAllStudents)
 router.get('/:id', StudentControllers.singleUser)
 router.delete('/:id', StudentControllers.deleteStudentFromDb)
 
