@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 const createDepartmentValidationSchema = z.object({
   body: z.object({
@@ -11,7 +11,7 @@ const createDepartmentValidationSchema = z.object({
       required_error: 'Faculty is required',
     }),
   }),
-});
+})
 
 const updateDepartmentValidationSchema = z.object({
   body: z.object({
@@ -28,9 +28,9 @@ const updateDepartmentValidationSchema = z.object({
       })
       .optional(),
   }),
-});
+})
 
 export const DepartmentValidation = {
   createDepartmentValidationSchema,
   updateDepartmentValidationSchema,
-};
+}

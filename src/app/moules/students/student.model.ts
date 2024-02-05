@@ -8,19 +8,12 @@ import {
   TName,
   TStudent,
 } from './student.interface'
+import AppError from '../../errors/appError'
 
 const userNameSchema = new Schema<TName, StudentModels>({
   firstName: {
     type: String,
     required: true,
-    validate: {
-      validator: function (value: string) {
-        const firstStr = value.charAt(0).toUpperCase() + value.slice(1)
-        return firstStr === value
-      },
-      message: '{VALUE} is uppercase',
-    },
-    trim: true,
   },
   middleName: {
     type: String,
@@ -28,10 +21,6 @@ const userNameSchema = new Schema<TName, StudentModels>({
   lastName: {
     type: String,
     required: true,
-    validate: {
-      validator: (value: string) => validator.isAlpha(value),
-    },
-    massage: '{VALUE} is not a valid string',
   },
 })
 const guardianSchema = new Schema<TGuardian>({
@@ -158,6 +147,14 @@ StudentSchema.pre('find', async function (next) {
 // handle single deleted data is not coming to the client side
 StudentSchema.pre('findOne', async function (next) {
   this.findOne({ isDeleted: { $ne: true } })
+  next()
+})
+
+StudentSchema.pre('save', async function (next) {
+  const existingUser = await StudentModel.findOne({ email: this.email })
+  if (existingUser) {
+    throw new AppError(200, 'user alredy exist')
+  }
   next()
 })
 // handle aggregation single deleted data is not coming to the client side

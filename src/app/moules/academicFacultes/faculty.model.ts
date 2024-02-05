@@ -1,6 +1,5 @@
-import { Schema, model } from 'mongoose';
-import { TFaculty } from './faculty.interface';
-
+import { Schema, model } from 'mongoose'
+import { TFaculty } from './faculty.interface'
 
 const facultySchema = new Schema<TFaculty>(
   {
@@ -13,9 +12,6 @@ const facultySchema = new Schema<TFaculty>(
   {
     timestamps: true,
   },
-);
+)
 
-export const Faculty = model<TFaculty>(
-  'Faculty',
-  facultySchema,
-);
+export const Faculty = model<TFaculty>('Faculty', facultySchema)

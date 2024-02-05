@@ -1,9 +1,7 @@
-
-import { Schema, model } from 'mongoose';
-import { TDepartment } from './department.interface';
-import AppError from '../../errors/appError';
-import httpStatus from 'http-status';
-
+import { Schema, model } from 'mongoose'
+import { TDepartment } from './department.interface'
+import AppError from '../../errors/appError'
+import httpStatus from 'http-status'
 
 const DepartmentSchema = new Schema<TDepartment>(
   {
@@ -20,32 +18,32 @@ const DepartmentSchema = new Schema<TDepartment>(
   {
     timestamps: true,
   },
-);
+)
 
 DepartmentSchema.pre('save', async function (next) {
   const isDepartmentExist = await Department.findOne({
     name: this.name,
-  });
+  })
 
   if (isDepartmentExist) {
-    throw new AppError(httpStatus.NOT_FOUND,'This department is already exist!')
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'This department is already exist!',
+    )
   }
 
-  next();
-});
+  next()
+})
 
 DepartmentSchema.pre('findOneAndUpdate', async function (next) {
-  const query = this.getQuery();
-  const isDepartmentExist = await Department.findOne(query);
+  const query = this.getQuery()
+  const isDepartmentExist = await Department.findOne(query)
 
   if (!isDepartmentExist) {
-    throw new AppError(404,'This department does not exist!')
+    throw new AppError(404, 'This department does not exist!')
   }
 
-  next();
-});
+  next()
+})
 
-export const Department = model<TDepartment>(
-  'Department',
-  DepartmentSchema,
-);
+export const Department = model<TDepartment>('Department', DepartmentSchema)

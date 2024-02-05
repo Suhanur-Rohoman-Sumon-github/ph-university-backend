@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import validator from 'validator'
 
 const NameSchema = z.object({
   firstName: z
@@ -10,9 +9,7 @@ const NameSchema = z.object({
       message: 'First name should start with an uppercase letter',
     }),
   middleName: z.string(),
-  lastName: z.string().refine(value => validator.isAlpha(value), {
-    message: 'Last name should be a valid string',
-  }),
+  lastName: z.string(),
 })
 
 const GuardianSchema = z.object({
@@ -48,7 +45,49 @@ const StudentValidationSchema = z.object({
     }),
   }),
 })
+const updateUserNameValidationSchema = z.object({
+  firstName: z.string().min(1).max(20).optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().optional(),
+})
+
+const updateGuardianValidationSchema = z.object({
+  fatherName: z.string().optional(),
+  fatherOccupation: z.string().optional(),
+  fatherContactNo: z.string().optional(),
+  motherName: z.string().optional(),
+  motherOccupation: z.string().optional(),
+  motherContactNo: z.string().optional(),
+})
+
+const updateLocalGuardianValidationSchema = z.object({
+  name: z.string().optional(),
+  occupation: z.string().optional(),
+  contactNo: z.string().optional(),
+  address: z.string().optional(),
+})
+
+export const updateStudentValidationSchema = z.object({
+  body: z.object({
+    student: z.object({
+      name: updateUserNameValidationSchema,
+      gender: z.enum(['male', 'female']).optional(),
+      dateOfBirth: z.string().optional(),
+      email: z.string().email().optional(),
+      contactNo: z.string().optional(),
+      emergencyContactNo: z.string().optional(),
+      bloogGroup: z.enum(['A+', 'A-', 'B+']).optional(),
+      presentAddress: z.string().optional(),
+      permanentAddress: z.string().optional(),
+      guardian: updateGuardianValidationSchema.optional(),
+      localGuardian: updateLocalGuardianValidationSchema.optional(),
+      admissionSemester: z.string().optional(),
+      academicDepartment: z.string().optional(),
+    }),
+  }),
+})
 
 export const StudentValidation = {
   StudentValidationSchema,
+  updateStudentValidationSchema,
 }
