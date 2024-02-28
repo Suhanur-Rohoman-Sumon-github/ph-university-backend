@@ -4,12 +4,23 @@ import AppError from '../../errors/appError'
 import httpStatus from 'http-status'
 import { UserModel } from '../users/user.model'
 import { TStudent } from './student.interface'
+import QueryBuilder from '../../builder/queryBuilder'
+import { studentSearchableFields } from './student.const'
 
-const getAllUserDB = async () => {
-  const result = await StudentModel.find()
-    .populate('admissionSemester')
-    .populate('user')
-  return result
+const getAllUserDB = async (query: Record<string, unknown>) => {
+  const studentQuery = new QueryBuilder(
+    StudentModel.find()
+      .populate('user')
+      ,
+    query,
+  )
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+    const result = await studentQuery.modelQuery;
+    return result
 }
 
 const getSingleDatafromDB = async (id: string) => {
