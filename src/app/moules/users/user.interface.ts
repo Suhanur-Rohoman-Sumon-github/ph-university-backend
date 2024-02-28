@@ -5,4 +5,5 @@ export type TUser = {
   role: 'admin' | 'student' | 'faculty'
   status: 'inprogress' | 'blocked'
   isDeleted: boolean
+  email: string
 }

@@ -21,7 +21,7 @@ const DepartmentSchema = new Schema<TDepartment>(
 )
 
 DepartmentSchema.pre('save', async function (next) {
-  const isDepartmentExist = await Department.findOne({
+  const isDepartmentExist = await DepartmentModels.findOne({
     name: this.name,
   })
 
@@ -37,7 +37,7 @@ DepartmentSchema.pre('save', async function (next) {
 
 DepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery()
-  const isDepartmentExist = await Department.findOne(query)
+  const isDepartmentExist = await DepartmentModels.findOne(query)
 
   if (!isDepartmentExist) {
     throw new AppError(404, 'This department does not exist!')
@@ -46,4 +46,7 @@ DepartmentSchema.pre('findOneAndUpdate', async function (next) {
   next()
 })
 
-export const Department = model<TDepartment>('Department', DepartmentSchema)
+export const DepartmentModels = model<TDepartment>(
+  'Department',
+  DepartmentSchema,
+)

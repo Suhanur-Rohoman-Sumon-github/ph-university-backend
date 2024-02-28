@@ -9,18 +9,16 @@ import { studentSearchableFields } from './student.const'
 
 const getAllUserDB = async (query: Record<string, unknown>) => {
   const studentQuery = new QueryBuilder(
-    StudentModel.find()
-      .populate('user')
-      ,
+    StudentModel.find().populate('user'),
     query,
   )
     .search(studentSearchableFields)
     .filter()
     .sort()
     .paginate()
-    .fields();
-    const result = await studentQuery.modelQuery;
-    return result
+    .fields()
+  const result = await studentQuery.modelQuery
+  return result
 }
 
 const getSingleDatafromDB = async (id: string) => {
@@ -29,8 +27,6 @@ const getSingleDatafromDB = async (id: string) => {
 }
 
 const updateStudentIntoDb = async (id: string, payload: Partial<TStudent>) => {
-  
-
   const { name, guardian, localGuardian, ...remainingData } = payload
 
   const modifiedUpdatedData: Record<string, unknown> = {
@@ -42,7 +38,6 @@ const updateStudentIntoDb = async (id: string, payload: Partial<TStudent>) => {
       modifiedUpdatedData[`name.${key}`] = value
     }
   }
-
 
   if (guardian && Object.keys(guardian).length) {
     for (const [key, value] of Object.entries(guardian)) {
@@ -65,7 +60,6 @@ const updateStudentIntoDb = async (id: string, payload: Partial<TStudent>) => {
     },
   )
 
- 
   return result
 }
 

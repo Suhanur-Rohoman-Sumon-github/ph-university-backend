@@ -20,39 +20,38 @@ const handleGlobalError: ErrorRequestHandler = (err, req, res, next) => {
     },
   ]
 
-  
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err)
     statusCode = simplifiedError?.statusCode
     message = simplifiedError?.message
     errorSources = simplifiedError?.errorSources
-  }else if (err?.name === 'ValidationError'){
+  } else if (err?.name === 'ValidationError') {
     const simplifiedError = handleValidationError(err)
     statusCode = simplifiedError.statusCode
     message = simplifiedError?.message
     errorSources = simplifiedError?.errorSources
-  }else if (err?.code === 11000) {
-    const simplifiedError = handleDuplicateError(err);
-    statusCode = simplifiedError?.statusCode;
-    message = simplifiedError?.message;
-    errorSources = simplifiedError?.errorSources;
+  } else if (err?.code === 11000) {
+    const simplifiedError = handleDuplicateError(err)
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSources = simplifiedError?.errorSources
   } else if (err instanceof AppError) {
-    statusCode = err?.statusCode;
-    message = err.message;
+    statusCode = err?.statusCode
+    message = err.message
     errorSources = [
       {
         path: '',
         message: err?.message,
       },
-    ];
+    ]
   } else if (err instanceof Error) {
-    message = err.message;
+    message = err.message
     errorSources = [
       {
         path: '',
         message: err?.message,
       },
-    ];
+    ]
   }
 
   // ultimate return
@@ -61,7 +60,7 @@ const handleGlobalError: ErrorRequestHandler = (err, req, res, next) => {
     massage: message,
     errorSource: errorSources,
     // error: err,
-    stack : config.node_Env == "development" ? err.stack : ''
+    stack: config.node_Env == 'development' ? err.stack : '',
   })
 }
 

@@ -1,23 +1,33 @@
 import express from 'express'
-import validateRequest from '../../../middleware/validateRequest'
-import { FacultyValidation } from './faculty.validation'
 import { FacultyControllers } from './faculty.controller'
+import validateRequest from '../../../middleware/validateRequest'
+import { updateFacultyValidationSchema } from './faculty.validation'
 
 const router = express.Router()
 
-router.post(
-  '/create-faculty',
-  validateRequest(FacultyValidation.createFacultyValidationSchema),
-  FacultyControllers.createFaculty,
+router.get(
+  '/:id',
+
+  FacultyControllers.getSingleFaculty,
 )
 
-router.get('/:facultyId', FacultyControllers.getSingleFaculty)
-router.get('/', FacultyControllers.getAllFaculties)
-
 router.patch(
-  '/:facultyId',
-  validateRequest(FacultyValidation.updateFacultyValidationSchema),
+  '/:id',
+
+  validateRequest(updateFacultyValidationSchema),
   FacultyControllers.updateFaculty,
+)
+
+router.delete(
+  '/:id',
+
+  FacultyControllers.deleteFaculty,
+)
+
+router.get(
+  '/',
+
+  FacultyControllers.getAllFaculties,
 )
 
 export const FacultyRoutes = router
