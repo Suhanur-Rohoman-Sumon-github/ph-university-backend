@@ -1,9 +1,9 @@
 import express, { Application, Request, Response } from 'express'
 const app: Application = express()
 import cors from 'cors'
-import notFoundRoute from './middleware/notFoundRoute'
-import handleGlobalError from './middleware/globalErrorHandler'
-import router from './routes/route'
+import notFoundRoute from './app/middleware/notFoundRoute'
+import handleGlobalError from './app/middleware/globalErrorHandler'
+import router from './app/routes/route'
 
 // parser
 app.use(express.json())

@@ -1,6 +1,6 @@
 import express from 'express'
 import { FacultyControllers } from './faculty.controller'
-import validateRequest from '../../../middleware/validateRequest'
+import validateRequest from '../../middleware/validateRequest'
 import { updateFacultyValidationSchema } from './faculty.validation'
 
 const router = express.Router()

@@ -1,6 +1,6 @@
 import express from 'express'
 import { StudentControllers } from './student.cntroller'
-import validateRequest from '../../../middleware/validateRequest'
+import validateRequest from '../../middleware/validateRequest'
 import { updateStudentValidationSchema } from './student.validation'
 
 const router = express.Router()

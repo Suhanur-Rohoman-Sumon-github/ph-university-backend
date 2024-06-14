@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { StudentRouter } from '../app/moules/students/student.route'
-import { SemesterRoute } from '../app/moules/academicSemister/semester.route'
-import { FacultyRoutes } from '../app/moules/academicFacultes/faculty.route'
-import { DepartmentRoutes } from '../app/moules/academicDepartment/department.route'
-import { UserRoutes } from '../app/moules/users/user.route'
+import { StudentRouter } from '../moules/students/student.route'
+import { SemesterRoute } from '../moules/academicSemister/semester.route'
+import { FacultyRoutes } from '../moules/academicFacultes/faculty.route'
+import { DepartmentRoutes } from '../moules/academicDepartment/department.route'
+import { UserRoutes } from '../moules/users/user.route'
+import { CorseRoute } from '../moules/course/course.route'
 
 const router = Router()
 
@@ -27,6 +28,10 @@ const moduleRoute = [
   {
     path: '/departments',
     route: DepartmentRoutes,
+  },
+  {
+    path: '/course',
+    route: CorseRoute,
   },
 ]
 

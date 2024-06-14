@@ -3,12 +3,12 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import status from 'http-status'
 import { ZodError, ZodIssue } from 'zod'
-import { TErrorSources } from '../app/interface/error'
-import config from '../app/config'
-import handleZodError from '../app/errors/handleZodErrors'
-import handleValidationError from '../app/errors/handleValidationsError'
-import AppError from '../app/errors/appError'
-import handleDuplicateError from '../app/errors/handleDuplicateError'
+import { TErrorSources } from '../interface/error'
+import config from '../config'
+import handleZodError from '../errors/handleZodErrors'
+import handleValidationError from '../errors/handleValidationsError'
+import AppError from '../errors/appError'
+import handleDuplicateError from '../errors/handleDuplicateError'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const handleGlobalError: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500

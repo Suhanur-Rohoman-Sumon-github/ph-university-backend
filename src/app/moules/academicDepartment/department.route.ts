@@ -1,6 +1,6 @@
 import express from 'express'
 import { DepartmentControllers } from './department.controller'
-import validateRequest from '../../../middleware/validateRequest'
+import validateRequest from '../../middleware/validateRequest'
 import { DepartmentValidation } from './department.validation'
 
 const router = express.Router()

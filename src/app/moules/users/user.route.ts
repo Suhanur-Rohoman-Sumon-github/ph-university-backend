@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express from 'express'
 import { UserControllers } from './user.controller'
-import validateRequest from '../../../middleware/validateRequest'
+import validateRequest from '../../middleware/validateRequest'
 import { createAdminValidationSchema } from '../admin/admin.validation'
 import { UserValidation } from './user.validation'
 import { createStudentValidationSchema } from '../students/student.validation'

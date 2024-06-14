@@ -1,7 +1,7 @@
 import httpStatus from 'http-status'
-import catchAsync from '../../../utils/catchAsync'
+import catchAsync from '../../utils/catchAsync'
 import { DepartmentServices } from './department.services'
-import sendResponse from '../../../utils/sendResponse'
+import sendResponse from '../../utils/sendResponse'
 
 const createDepartmemt = catchAsync(async (req, res) => {
   const result = await DepartmentServices.createDepartmentIntoDB(req.body)
