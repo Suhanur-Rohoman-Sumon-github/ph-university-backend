@@ -17,12 +17,12 @@ router.get(
   CorseController.getSingleCourse,
 )
 
-  router.patch(
-    '/:id',
+router.patch(
+  '/:id',
 
-    validateRequest(courseValidation.updateCourseValidationSchema),
-    CorseController.updateCourse,
-  )
+  validateRequest(courseValidation.updateCourseValidationSchema),
+  CorseController.updateCourse,
+)
 
 router.delete(
   '/:id',

@@ -24,74 +24,80 @@ const getAllCoursesFromDB = async (payload: Record<string, unknown>) => {
   return result
 }
 const getSingleCourseFromDB = async (id: string) => {
-  const result = await CourseModel.findById(id).populate('preRequisiteCourses.course')
+  const result = await CourseModel.findById(id).populate(
+    'preRequisiteCourses.course',
+  )
   return result
 }
 
-const updateCourseIntoDB = async (id:string , payload:Partial<TCourse>) => {
-  const {preRequisiteCourses,...courseRemainingData} = payload ;
+const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
+  const { preRequisiteCourses, ...courseRemainingData } = payload
   const session = await mongoose.startSession()
 
- try {
-  
- await session.startTransaction()
+  try {
+    await session.startTransaction()
 
-  const updateBasicCourseInfo = await CourseModel.findByIdAndUpdate(id,
-    courseRemainingData
-  ,{
-    new:true,
-    runValidators:true,
-    session
-  })
-
-  if(!updateBasicCourseInfo){
-    throw new AppError(httpStatus.BAD_REQUEST,'field to update course ')
-  }
-
-  // if there any pre requesit courses
-
-  if(preRequisiteCourses && preRequisiteCourses.length > 0){
-    // filter out the deleted fields
-    const deletedPreRequisite = preRequisiteCourses.filter(el=>el.course  &&  el.isDeleted).map(el=>el.course)
-    const deletedPreRequisiteCourses = await CourseModel.findByIdAndUpdate(
+    const updateBasicCourseInfo = await CourseModel.findByIdAndUpdate(
       id,
+      courseRemainingData,
       {
-        $pull:{preRequisiteCourses :{course:{$in : deletedPreRequisite}}}
+        new: true,
+        runValidators: true,
+        session,
       },
-      {new:true,
-        runValidators:true,
-        session
-      }
     )
 
-    if(!deletedPreRequisiteCourses){
-      throw new AppError(httpStatus.BAD_REQUEST,'failed to deleted data ')
+    if (!updateBasicCourseInfo) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'field to update course ')
     }
-    const newPreRequisite = preRequisiteCourses?.filter(el=>el.course && !el.isDeleted)
 
-    const newPreRequisiteCourses = await CourseModel.findByIdAndUpdate(id,{
-      $addToSet:{preRequisiteCourses:{$each :newPreRequisite}}
-     },{new:true,
-      runValidators:true,
-      session
-     })
-     if(!newPreRequisiteCourses){
-      throw new AppError(httpStatus.BAD_REQUEST,'failed to add new data  ')
+    // if there any pre requesit courses
+
+    if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+      // filter out the deleted fields
+      const deletedPreRequisite = preRequisiteCourses
+        .filter(el => el.course && el.isDeleted)
+        .map(el => el.course)
+      const deletedPreRequisiteCourses = await CourseModel.findByIdAndUpdate(
+        id,
+        {
+          $pull: {
+            preRequisiteCourses: { course: { $in: deletedPreRequisite } },
+          },
+        },
+        { new: true, runValidators: true, session },
+      )
+
+      if (!deletedPreRequisiteCourses) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'failed to deleted data ')
+      }
+      const newPreRequisite = preRequisiteCourses?.filter(
+        el => el.course && !el.isDeleted,
+      )
+
+      const newPreRequisiteCourses = await CourseModel.findByIdAndUpdate(
+        id,
+        {
+          $addToSet: { preRequisiteCourses: { $each: newPreRequisite } },
+        },
+        { new: true, runValidators: true, session },
+      )
+      if (!newPreRequisiteCourses) {
+        throw new AppError(httpStatus.BAD_REQUEST, 'failed to add new data  ')
+      }
     }
+    const result = await CourseModel.findById(id).populate(
+      'preRequisiteCourses.course',
+    )
+    await session.commitTransaction()
+    await session.endSession()
+
+    return result
+  } catch (error) {
+    await session.abortTransaction()
+    await session.endSession()
+    throw new AppError(httpStatus.BAD_REQUEST, 'failed to add new data  ')
   }
-  const result = await CourseModel.findById(id).populate("preRequisiteCourses.course")
-  await session.commitTransaction()
-  await session.endSession()
-
- 
-  return result
-
- } catch (error) {
-  await session.abortTransaction()
-  await session.endSession()
-  throw new AppError(httpStatus.BAD_REQUEST,'failed to add new data  ')
- }
-
 }
 
 const deleteACorseFromDB = async (id: string) => {
@@ -112,5 +118,5 @@ export const courseServices = {
   getAllCoursesFromDB,
   getSingleCourseFromDB,
   deleteACorseFromDB,
-  updateCourseIntoDB
+  updateCourseIntoDB,
 }

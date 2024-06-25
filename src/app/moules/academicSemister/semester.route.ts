@@ -12,6 +12,7 @@ router.post(
 )
 
 router.get('/:courseId', SemesterController.getSingleAcademicSemester)
+router.get('/', SemesterController.getAllAcademicSemesters)
 
 router.patch(
   '/:courseId',
