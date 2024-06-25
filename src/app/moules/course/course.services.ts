@@ -79,11 +79,13 @@ const updateCourseIntoDB = async (id:string , payload:Partial<TCourse>) => {
       throw new AppError(httpStatus.BAD_REQUEST,'failed to add new data  ')
     }
   }
-
   const result = await CourseModel.findById(id).populate("preRequisiteCourses.course")
+  await session.commitTransaction()
+  await session.endSession()
+
+ 
   return result
- await session.commitTransaction()
- await session.endSession()
+
  } catch (error) {
   await session.abortTransaction()
   await session.endSession()
